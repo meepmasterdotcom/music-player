@@ -1,0 +1,188 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gray-50: #242426;
+  --color-gray-100: #444446;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;    
+  overflow: hidden; 
+}
+
+
+
+/* ===== MenuPlayer settings ===== */
+#container-scroll {
+    position: relative;
+    white-space: nowrap;
+    overflow-x: hidden;
+    max-width: 250px;
+    min-width: 150px;
+}
+
+#container-scroll::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 100%;
+    background: linear-gradient(to left, black, transparent);
+    pointer-events: none;
+    z-index: 2;
+}
+
+#container-scroll #content-scroll {
+    display: inline-block;
+    z-index: 1;
+}
+
+#child-scroll {
+    z-index: 3;
+}
+
+.marquee {
+    animation: marquee 6s ease-in-out infinite alternate;
+}
+
+@keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(var(--deslocamento, 0px)); }
+}
+
+
+
+
+/* ===== Scroll Lateral do conteúdo ===== */
+#scrollable-div {
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+#scrollable-div::-webkit-scrollbar {
+  width: 15px;
+  padding-right: 30px;
+  background-color: transparent;
+}
+
+#scrollable-div::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  /* border-radius: 5px; */
+}
+
+#aside-container:hover > ::-webkit-scrollbar-thumb {
+  background: #3232339c;
+}
+
+#main-container:hover > ::-webkit-scrollbar-thumb {
+  background: #3232339c;
+}
+
+
+
+
+/* ===== Barra de Andamento da música ===== */
+input#andamentoMusica[type="range"]::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 100px;
+  background: linear-gradient(
+    to right,
+    #D1D1D6 0%,
+    #D1D1D6 var(--progressTime),
+    #636366 var(--progressTime),
+    #636366 100%
+  );
+}
+
+#hover-target:hover > #andamentoMusica[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+}
+
+input#andamentoMusica[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+}
+
+#hover-target:hover > #andamentoMusica[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background: #ffffff;
+  margin-top: -3px;  
+}
+
+/* ===== Firefox ===== */
+input#andamentoMusica[type="range"]::-moz-range-progress {
+  height: 2px;
+  border-radius: 100px;
+  background: #D1D1D6; /* parte preenchida */
+}
+
+input#andamentoMusica[type="range"]::-moz-range-track {
+  height: 2px;
+  border-radius: 100px;
+  background: #636366; /* parte não preenchida */
+}
+
+input#andamentoMusica[type="range"]::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #D1D1D6;
+  cursor: pointer;
+}
+
+
+
+
+/* ===== Barra de volume ===== */
+input#barraVolume[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 100px;
+  background: linear-gradient(
+    to right,
+    #D1D1D6 0%,
+    #D1D1D6 var(--progressVolume),
+    #636366 var(--progressVolume),
+    #636366 100%
+  );
+}
+
+input#barraVolume[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+  margin-top: -3px;
+}
+
+/* ===== Firefox ===== */
+input#barraVolume[type="range"]::-moz-range-progress {
+  height: 2px;
+  border-radius: 100px;
+  background: #D1D1D6; /* parte preenchida */
+}
+
+input#barraVolume[type="range"]::-moz-range-track {
+  height: 2px;
+  border-radius: 100px;
+  background: #636366; /* parte não preenchida */
+}
+
+input#barraVolume[type="range"]::-moz-range-thumb {
+  height: 10px;
+  width: 10px;
+  border-radius: 100px;
+  background: #D1D1D6;
+  cursor: pointer;
+}
