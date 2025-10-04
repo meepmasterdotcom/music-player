@@ -1,6 +1,6 @@
 # music-player-vue
 
-This template should help get you started developing with Vue 3 in Vite.
+This template help to get started with Vue 3 in Vite.
 
 ## Recommended IDE Setup
 
