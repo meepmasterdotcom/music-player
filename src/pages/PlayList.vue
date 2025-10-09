@@ -15,7 +15,7 @@ const player = usePlayerStore()
             <p>Aqui você pode ver suas músicas...</p>
         </div>
 
-        <div class="flex gap-2 p-2 bg-gray-50 sticky top-[-20px] mt[-20px]">
+        <div class="flex gap-2 p-2 bg-gray-50 sticky top-[-20px] mt[-20px] border-b-1 border-neutral-400 pt-4 pb-2">
             <div class="flex w-[30px] justify-center">
                 <span class="text-neutral-200 font-semibold px-5">
                     #
@@ -46,8 +46,6 @@ const player = usePlayerStore()
                 </h3>
             </div>
         </div>
-
-        <hr class="text-neutral-400 pb-5">
 
         <div class="flex-1 rounded-md">
             <div class="flex flex-nowrap items-center hover:cursor-pointer hover:bg-neutral-600 rounded-md p-2 gap-2"
