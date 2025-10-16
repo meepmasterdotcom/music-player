@@ -1,6 +1,7 @@
 <script setup>
-  import { onMounted, ref } from 'vue';
+  import { onMounted, ref, watch } from 'vue';
   import { usePlayerStore } from './store/player';
+import NovaPlaylist from './pages/NovaPlaylist.vue';
 
   const player = usePlayerStore()
   const audioRef = ref(null)
@@ -20,13 +21,26 @@
     document.documentElement.style.setProperty("--progressVolume", `${player.audioVolume}%`);
   })
 
+  watch(
+    () => player.playlistAtiva?.[faixaAtual],
+    (novaFaixa) => {
+      if (novaFaixa && player.audio) {
+        player.audio.src = novaFaixa.url;
+        player.audio.load();
+
+        if (player.isPlaying) {
+          player.audio.play()
+        }
+      }
+    }
+  );
 </script>
 
 <template>
     <audio 
       ref="audioRef"
       type="audio/mpeg" 
-      :src="player.faixas[player.faixaAtual]?.url" 
+      :src="player.playlistAtiva?.[player.faixaAtual]?.url" 
       @timeupdate="player.currentTime = $event.target.currentTime"
       @loadedmetadata="player.duration = $event.target.duration"
       @ended="player.nextFaixa()"

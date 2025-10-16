@@ -1,31 +1,36 @@
 <script setup>
 
 import { usePlayerStore } from '@/store/player';
+import { usePlaylistStore } from '@/store/playlists';
 
 import AsideMenu from '@/components/AsideMenu.vue';
 import MenuPlayer from '@/components/MenuPlayer.vue';
 import NavBar from '@/components/NavBar.vue';  
 
-const player = usePlayerStore()
-
+const player = usePlayerStore();
+const playlist = usePlaylistStore();
 </script>
 
 <template>
     <section id="conteudo" class="flex flex-col h-screen overflow-hidden bg-black gap-2.5 px-3">
         <NavBar />
 
-        <div id="conteudo" class="flex flex-1 overflow-hidden gap-2.5">
+        <main id="conteudo" class="flex flex-1 overflow-hidden gap-2.5">
             <aside id="aside-container" class="flex flex-1 overflow-hidden rounded-md">
-                <AsideMenu />
+                <div id="scrollable-div" class="flex-1 bg-gray-50 p-5 rounded-md">
+                    <AsideMenu />
+                </div>
             </aside>
             <div id="main-container" class="flex flex-3 overflow-hidden rounded-md">
-                <RouterView/>
+                <div  id="scrollable-div" class="flex-1 bg-gray-50 p-5 rounded-md">
+                    <RouterView/>
+                </div>
             </div>    
-        </div>
+        </main>
 
         <MenuPlayer
-            :coverPlayer="player.faixas[player.faixaAtual]?.cover"
-            :faixasPlayer="player.faixas" 
+            :coverPlayer="player.filaAtual[player.faixaAtual]?.cover || ''"
+            :faixasPlayer="player.filaAtual" 
             :faixaAtualPlayer="player.faixaAtual"
             :isPlayingPlayer="player.isPlaying"
             :currentTimePlayer="player.currentTime"

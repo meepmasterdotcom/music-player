@@ -1,66 +1,75 @@
 <script setup>
 
-    import { ref, onMounted, nextTick, watch } from 'vue'
+import { usePlayerStore } from '@/store/player'
+import { ref, onMounted, nextTick, watch } from 'vue'
 
-    const props = defineProps({
-        coverPlayer: String,
-        faixasPlayer: Object,
-        faixaAtualPlayer: Number,
-        isPlayingPlayer: Boolean,
-        currentTimePlayer: Number,
-        durationPlayer: Number,
-        audioVolumePlayer: Number,
-    })
+const player = usePlayerStore();
 
-    const emit = defineEmits(['nextFaixa', 'prevFaixa', 'playPause', 'barraProgressao', 'volumeChange'])
+const props = defineProps({
+    coverPlayer: String,
+    faixasPlayer: Array,
+    faixaAtualPlayer: Number,
+    isPlayingPlayer: Boolean,
+    currentTimePlayer: Number,
+    durationPlayer: Number,
+    audioVolumePlayer: Number,
+});
 
-    // Função para formatar tempo
-    const formatedTime = (segundos) => {
-        if (isNaN(segundos)) {
-            return "-:--"
-        }
-        const min = Math.floor(segundos / 60);
-        const seg = Math.floor(segundos % 60);
-        return `${min}:${seg < 10 ? '0' : ''}${seg}`;
+const emit = defineEmits([
+    'nextFaixa',
+    'prevFaixa',
+    'playPause',
+    'barraProgressao',
+    'volumeChange',
+])
+
+// Função para formatar tempo
+const formatedTime = (segundos) => {
+    if (isNaN(segundos)) {
+        return "-:--"
     }
+    const min = Math.floor(segundos / 60);
+    const seg = Math.floor(segundos % 60);
+    return `${min}:${seg < 10 ? '0' : ''}${seg}`;
+}
 
-    const scrollContainer = ref(null);
-    const scrollContent = ref(null);
+const scrollContainer = ref(null);
+const scrollContent = ref(null);
 
-    const deslocamento = ref(0)
-    const scrollSlide = ref(false)
+const deslocamento = ref(0)
+const scrollSlide = ref(false)
 
-    const calcularScroll = async () => {
-        await nextTick()
-        const container = scrollContainer.value
-        const content = scrollContent.value
+const calcularScroll = async () => {
+    await nextTick()
+    const container = scrollContainer.value
+    const content = scrollContent.value
 
-        if (container && content) {
-            const diff = content.scrollWidth - container.clientWidth
+    if (container && content) {
+        const diff = content.scrollWidth - container.clientWidth
 
-            if (diff > 0) {
-                scrollSlide.value = true;
-                deslocamento.value = -diff + "px";
-                container.style.setProperty("--deslocamento", deslocamento.value)
-            } else {
-                scrollSlide.value = false
-                deslocamento.value = "0px"
-            }
+        if (diff > 0) {
+            scrollSlide.value = true;
+            deslocamento.value = -diff + "px";
+            container.style.setProperty("--deslocamento", deslocamento.value)
+        } else {
+            scrollSlide.value = false
+            deslocamento.value = "0px"
         }
     }
+}
 
-    onMounted(() => {
-        calcularScroll()
-    })
+onMounted(() => {
+    calcularScroll()
+})
 
-    watch(() => props.faixaAtualPlayer, () => {
-        calcularScroll()
-    })
+watch(() => player.faixaAtualPlayer, () => {
+    calcularScroll()
+})
 
 </script>
 
 <template>
-    <nav class="w-full bg-black text-white p-3 pt-1 bg-black-900 shrink-0">
+    <nav v-if="faixasPlayer && faixasPlayer.length > 0" class="w-full bg-black text-white p-3 pt-1 bg-black-900 shrink-0">
         <div class="flex items-center justify-between">
             <div class="flex w-full items-center">
 
@@ -75,10 +84,10 @@
                             ref="scrollContent" 
                             :class="{ marquee: scrollSlide }"
                             > 
-                                {{ props.faixasPlayer[props.faixaAtualPlayer].nome }} 
+                                {{ faixasPlayer[faixaAtualPlayer]?.nome }} 
                         </h2>
                         <p id="child-scroll" class="text-xs font-semibold text-gray-400">
-                            {{ props.faixasPlayer[props.faixaAtualPlayer].artista }}
+                            {{ faixasPlayer[faixaAtualPlayer]?.artista }}
                         </p>
                     </div>
                 </div>
@@ -103,13 +112,13 @@
                         </div>
                         <div id="hover-target" class="flex items-center gap-2 w-full">
                             <span class="text-xs font-medium text-gray-500">
-                                {{ formatedTime(props.currentTimePlayer) }}
+                                {{ formatedTime(currentTimePlayer) }}
                             </span>
                             <input id="andamentoMusica"
                                 type="range"
                                 min="0"
-                                :max="props.durationPlayer"
-                                :value="props.currentTimePlayer"
+                                :max="durationPlayer"
+                                :value="currentTimePlayer"
                                 @input="emit('barraProgressao', $event.target.value)"
                                 class="
                                     outline-none
@@ -121,7 +130,7 @@
                                 "
                             >
                             <span class="text-xs font-medium text-gray-500">
-                                {{ formatedTime(props.durationPlayer) }}
+                                {{ formatedTime(durationPlayer) }}
                             </span>
                         </div>
                     </div>
@@ -136,7 +145,7 @@
                             min="0"
                             max="100"
                             step="1"
-                            :value="props.audioVolumePlayer"
+                            :value="audioVolumePlayer"
                             @input="emit('volumeChange', $event.target.value)"
                             class="
                                 w-2/3
@@ -153,4 +162,7 @@
             </div>
         </div>
     </nav>
+    <div v-else class="text-gray-400 text-center p-4">
+        Nenhuma música selecionada
+  </div>
 </template>
